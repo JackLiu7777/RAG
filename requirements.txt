@@ -1,0 +1,13 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pydantic-settings>=2.2
+python-multipart>=0.0.9
+PyYAML>=6.0
+chardet>=5.2
+numpy
+sentence-transformers
+faiss-cpu
+jieba
+rank-bm25
+openai

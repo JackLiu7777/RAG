@@ -1,0 +1,41 @@
+# ============================================
+# RAG 系统全局配置
+# 所有"以后想调"的参数都放这里，代码里不写死
+# 改完重启服务即可生效
+# ============================================
+
+app:
+  name: "Local RAG Demo"
+  host: "127.0.0.1"
+  port: 8000
+
+# 离线链路：文件切分
+ingestion:
+  chunk_size: 500        # 每个文本块大约多少字
+  chunk_overlap: 80      # 相邻两块重叠多少字（防止一句话被从中间切断）
+
+# 在线链路：检索
+retrieval:
+  top_k_per_channel: 5        # 每路（语义/关键词）各召回多少块
+  rerank_top_n: 3             # 精排后每路取多少块（per_channel 模式）
+  mode: "rrf"                 # rrf = 先 RRF 融合再精排；per_channel_rerank = 两路独立精排
+  rrf_k: 60                   # RRF 常数，业界默认 60，一般不用动
+  rrf_top_candidates: 10      # RRF 融合后送进 Rerank 的候选总数
+
+# Embedding 模型（本地跑）
+embedding:
+  model_name: "C:/Users/26819/Desktop/bge-base-zh-v1.5"
+  device: "cpu"               # GPU 版 torch 下好后改回 cuda
+
+# Rerank 模型（本地跑）
+reranker:
+  model_name: "C:/Users/26819/Desktop/models/models/BAAI--bge-reranker-base/snapshots/master"
+  device: "cpu"
+
+# 大模型 API（在线回答）
+llm:
+  provider: "zhipu"
+  model: "glm-4-flash"
+  base_url: "https://open.bigmodel.cn/api/paas/v4"
+  temperature: 0.1            # RAG 回答要稳、别瞎发挥，温度调低
+  # api_key 不写在这里，从 .env 里读 ZHIPU_API_KEY
